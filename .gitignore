@@ -1,6 +1,5 @@
 dist/
 coverage.out
-*.exe
 *.test
 *.out
 .DS_Store

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  test-build-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+
+      - name: Run unit tests
+        run: go test ./...
+
+      - name: Build binary
+        run: go build -o bin/scout-cli ./cmd/scout-cli
+
+      - name: Build Docker image
+        run: docker build -t scout-cli:ci .
+
+      - name: Docker Scout scan
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: scout-cli:ci
+          only-severities: critical,high
+          exit-code: true

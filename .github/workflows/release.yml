@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build binary
+        run: go build -o scout-cli ./cmd/scout-cli
+
+      - name: Package release
+        run: tar -czf scout-cli-${{ github.ref_name }}.tar.gz scout-cli
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: scout-cli-${{ github.ref_name }}.tar.gz

@@ -1,0 +1,9 @@
+bin/
+dist/
+coverage.out
+*.exe
+*.test
+*.out
+.DS_Store
+.env
+docs/report.md

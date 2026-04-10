@@ -11,6 +11,8 @@ FROM debian:stable-slim
 
 WORKDIR /root/
 
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+
 COPY --from=builder /app/scout-cli .
 
 CMD ["./scout-cli"]

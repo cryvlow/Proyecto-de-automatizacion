@@ -1,18 +1,18 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.22 AS builder
 
 WORKDIR /app
 
 COPY go.mod ./
+RUN go mod tidy
+
 COPY . .
 
 RUN go build -o scout-cli ./cmd/scout-cli
 
-FROM alpine:3.20
+FROM debian:stable-slim
 
-RUN apk add --no-cache ca-certificates
-WORKDIR /app
+WORKDIR /root/
 
-COPY --from=builder /app/scout-cli /usr/local/bin/scout-cli
+COPY --from=builder /app/scout-cli .
 
-ENTRYPOINT ["scout-cli"]
-CMD ["help"]
+CMD ["./scout-cli"]

@@ -1,10 +1,8 @@
-FROM golang:1.22 AS builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod ./
-RUN go mod tidy
-
 COPY . .
 
 RUN go build -o scout-cli ./cmd/scout-cli
